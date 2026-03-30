@@ -1,0 +1,2746 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#000000">
+<link rel="manifest" href="manifest.json">
+<title>PocilgAPP</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f3f3f3;
+    padding: 16px;
+    margin: 0;
+  }
+  h1, h2 {
+    margin-top: 0;
+  }
+  .topbar, .controls {
+    display: flex;
+    gap: 6px;
+    flex-wrap: nowrap;
+    margin-bottom: 12px;
+    align-items: center;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .topbar::-webkit-scrollbar, .controls::-webkit-scrollbar {
+    display: none;
+  }
+
+  .app-logo-wrap {
+    margin-bottom: 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .logo-container {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 2px;
+  }
+
+  
+
+    .header-logo-img {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex: 0 0 auto;
+  }
+  .logo-text-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  .app-logo-pro {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    display: flex;
+    gap: 0;
+    align-items: baseline;
+  }
+
+  .logo-main-pro {
+    color: #111827;
+  }
+
+  .logo-accent-pro {
+    background: linear-gradient(90deg, #22c55e, #4ade80);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 900;
+  }
+  .app-logo-sub {
+    margin-top: 4px;
+    font-size: 12px;
+    color: #6b7280;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .round-add-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 999px;
+    font-size: 30px;
+    box-shadow: 0 6px 16px rgba(17,24,39,0.18);
+  }
+
+  .topbar {
+    justify-content: space-between;
+  }
+
+  .theme-toggle-btn{
+  position: absolute;
+  top: 6px;
+  right: 36px;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  min-height: 24px;
+  border-radius: 999px;
+  font-size: 11px;
+  line-height: 1;
+  color: #6b7280;
+  background: #fafafa;
+  border: 1px solid #e5e7eb;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+  .theme-toggle-btn:hover {
+    background: #f3f4f6;
+  }
+  .add-icon-btn {
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    line-height: 1;
+    background: #111827;
+    color: white;
+    border: 1px solid #111827;
+    flex: 0 0 auto;
+  }
+  .add-icon-btn:hover {
+    background: #222;
+  }
+  .tiny-reset-btn {
+    margin-left: auto;
+    padding: 4px 8px;
+    font-size: 11px;
+    border-radius: 999px;
+    color: #666;
+    background: #fafafa;
+    border: 1px solid #e5e7eb;
+    flex: 0 0 auto;
+  }
+  .tiny-reset-btn:hover {
+    background: #f3f4f6;
+  }
+  .card {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    transition: background-color 0.25s ease, box-shadow 0.25s ease, transform 0.15s ease;
+  }
+  .card.just-cleaned {
+    background: #eefbea;
+    box-shadow: 0 0 0 1px rgba(34,197,94,0.15), 0 3px 10px rgba(34,197,94,0.12);
+  }
+  .bar {
+    height: 20px;
+    background: #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    margin-top: 8px;
+  }
+  .fill {
+    height: 100%;
+  }
+  .red {
+    background: red !important;
+    animation: blink 1s infinite;
+  }
+  .over {
+    height: 6px;
+    background: black;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  @keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.4; }
+    100% { opacity: 1; }
+  }
+  @keyframes spongeShake {
+    0% { transform: translateX(0) rotate(0deg) scale(1); }
+    12% { transform: translateX(-3px) rotate(-12deg) scale(1.1); }
+    24% { transform: translateX(3px) rotate(12deg) scale(1.1); }
+    36% { transform: translateX(-3px) rotate(-10deg) scale(1.08); }
+    48% { transform: translateX(3px) rotate(10deg) scale(1.08); }
+    60% { transform: translateX(-2px) rotate(-8deg) scale(1.05); }
+    72% { transform: translateX(2px) rotate(8deg) scale(1.05); }
+    100% { transform: translateX(0) rotate(0deg) scale(1); }
+  }
+  @keyframes cardNudge {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-2px); }
+    50% { transform: translateX(2px); }
+    75% { transform: translateX(-1px); }
+    100% { transform: translateX(0); }
+  }
+  .icon-btn.sponge-animate {
+    animation: spongeShake 0.65s ease;
+  }
+  .card.sponge-hit {
+    animation: cardNudge 0.4s ease;
+  }
+
+  button, input {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background: white;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+  button {
+    cursor: pointer;
+  }
+  button:hover {
+    background: #f7f7f7;
+  }
+  .primary {
+    background: black;
+    color: white;
+    border-color: black;
+  }
+  .primary:hover {
+    background: #222;
+  }
+  .danger {
+    border-color: #f3b4b4;
+    color: #b00020;
+    background: #fff6f6;
+  }
+  .dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 0 auto 4px auto;
+  }
+  .summary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .summary-right {
+    text-align: right;
+    min-width: 120px;
+  }
+  .summary-percent {
+    font-size: 28px;
+    font-weight: bold;
+    line-height: 1;
+  }
+  .summary-subtext {
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+  }
+  .summary-item {
+    width: 82px;
+    text-align: center;
+    font-size: 11px;
+    color: #444;
+    line-height: 1.2;
+  }
+  .summary-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .meta {
+    color: #555;
+    font-size: 14px;
+    margin-top: 4px;
+  }
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .action-left {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .action-right {
+    margin-left: auto;
+  }
+  .icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    border: 1px solid #d1d5db;
+    background: white;
+    will-change: transform;
+  }
+  .icon-btn.primary-icon {
+    background: #16a34a;
+    color: white;
+    border-color: #16a34a;
+  }
+  .icon-btn.primary-icon:hover {
+    background: #15803d;
+  }
+  .icon-btn.clean-big {
+    width: 74px;
+    font-size: 22px;
+  }
+  .icon-btn.danger-icon {
+    background: #fff6f6;
+    color: #b00020;
+    border-color: #f3b4b4;
+  }
+  #summary {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .empty {
+    color: #666;
+    background: white;
+    padding: 18px;
+    border-radius: 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    z-index: 1000;
+  }
+  .modal-backdrop.open {
+    display: flex;
+  }
+  .modal {
+    width: 100%;
+    max-width: 460px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    padding: 18px;
+  }
+  .modal h3 {
+    margin-top: 0;
+    margin-bottom: 14px;
+  }
+  .form-grid {
+    display: grid;
+    gap: 12px;
+  }
+  .field label {
+    display: block;
+    font-size: 13px;
+    color: #444;
+    margin-bottom: 5px;
+  }
+  .field input {
+    width: 100%;
+  }
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+
+  .mini-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex: 0 0 auto;
+    position: relative;
+  }
+  .mini-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    border: 1px solid #d1d5db;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex: 0 0 auto;
+    padding: 0;
+  }
+  .sort-current, .filter-current {
+    border: 1px solid #d1d5db;
+    background: white;
+    color: #333;
+    border-radius: 999px;
+    padding: 6px 10px;
+    font-size: 12px;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .popup-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    z-index: 1500;
+  }
+  .popup-backdrop.open {
+    display: flex;
+  }
+  .popup-card {
+    width: min(320px, 100%);
+    background: white;
+    border-radius: 18px;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.22);
+    padding: 14px;
+  }
+  .popup-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  .popup-options {
+    display: grid;
+    gap: 8px;
+  }
+  .popup-option {
+    width: 100%;
+    text-align: left;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    background: white;
+    font-size: 14px;
+  }
+  .popup-option.current {
+    background: #111827;
+    color: white;
+    border-color: #111827;
+  }
+
+  .bubble-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 2500;
+  }
+  .bubble {
+    position: absolute;
+    bottom: -40px;
+    border-radius: 999px;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.95), rgba(255,255,255,0.55) 45%, rgba(34,197,94,0.22) 100%);
+    border: 1px solid rgba(255,255,255,0.7);
+    box-shadow: 0 4px 14px rgba(34,197,94,0.18);
+    animation: bubbleRise 1s ease-out forwards;
+  }
+  @keyframes bubbleRise {
+    0% { transform: translateY(0) scale(0.7); opacity: 0; }
+    10% { opacity: 1; }
+    100% { transform: translateY(-55vh) scale(1.15); opacity: 0; }
+  }
+
+
+  
+  .sparkle-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 3000;
+  }
+  .sparkle {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.9);
+    box-shadow: 0 0 10px rgba(34,197,94,0.6);
+    animation: sparklePop 0.8s ease-out forwards;
+  }
+  @keyframes sparklePop {
+    0% { transform: scale(0.3); opacity: 0; }
+    30% { opacity: 1; }
+    100% { transform: translateY(-40px) scale(1.4); opacity: 0; }
+  }
+
+    20% { opacity: 1; }
+    100% { transform: translateY(-30px) scale(1.25) rotate(45deg); opacity: 0; }
+  }
+
+
+  @media (prefers-color-scheme: dark) {
+    body {
+      background: #1f2937;
+    }
+    .logo-main-pro {
+      color: #ffffff;
+    }
+    .app-logo-sub {
+      color: #f3f4f6;
+    }
+  }
+
+
+body.dark-mode {
+  background: #1f2937;
+}
+body.dark-mode .logo-main-pro {
+  color: #ffffff;
+}
+body.dark-mode .app-logo-sub {
+  color: #f3f4f6;
+}
+body.dark-mode .header-logo-img {
+  filter: brightness(1.12) contrast(1.08);
+}
+
+
+body.dark-mode .add-icon-btn {
+  background: #ffffff;
+  color: #111827;
+  border-color: #ffffff;
+}
+body.dark-mode .add-icon-btn:hover {
+  background: #f3f4f6;
+}
+
+
+  .summary-columns {
+    display: flex;
+    gap: 14px;
+    margin-top: 12px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .summary-columns::-webkit-scrollbar {
+    display: none;
+  }
+  .summary-column {
+    min-width: 84px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 0 0 auto;
+  }
+  .summary-room-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: #4b5563;
+    text-transform: uppercase;
+    line-height: 1.1;
+  }
+  .summary-dots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: flex-start;
+  }
+
+
+  .summary-task-item {
+    width: 52px;
+    text-align: center;
+    font-size: 10px;
+    color: #4b5563;
+    line-height: 1.15;
+  }
+  .summary-task-item .dot {
+    display: block;
+    margin: 0 auto 4px auto;
+  }
+
+
+  .task-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .task-title {
+    margin-bottom: 8px;
+
+    font-size: 18px;
+    font-weight: 800;
+
+    font-weight: 700;
+  }
+  .task-room-badge {
+    font-size: 11px;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    margin-top: 2px;
+  }
+  .meta-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #555;
+    font-size: 14px;
+    margin-top: 4px;
+  }
+  .meta-icon {
+    width: 16px;
+    display: inline-flex;
+    justify-content: center;
+    flex: 0 0 16px;
+  }
+
+
+  .meta-label {
+    font-weight: 700;
+    color: #111827;
+  }
+  .meta-value {
+    color: #4b5563;
+  }
+
+
+  .state-good { color: #16a34a; }
+  .state-warning { color: #ca8a04; }
+  .state-bad { color: #dc2626; }
+
+
+  @keyframes poopShake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-1px); }
+    50% { transform: translateX(1px); }
+    75% { transform: translateX(-1px); }
+    100% { transform: translateX(0); }
+  }
+  .poop-shake-once {
+    display: inline-block;
+    animation: poopShake 0.4s 5;
+  }
+
+
+  .critical-banner {
+    background: #fff1f2;
+    border: 1px solid #fecdd3;
+    color: #991b1b;
+    padding: 10px 12px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .critical-banner.good {
+    background: #ecfdf5;
+    border-color: #bbf7d0;
+    color: #065f46;
+  }
+
+
+  .highlight {
+    box-shadow: 0 0 0 2px #ef4444;
+  }
+
+
+  .view-toggle-btn {
+    position: absolute;
+    top: 10px;
+    right: 82px;
+    padding: 0;
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    min-height: 28px;
+    border-radius: 999px;
+    font-size: 13px;
+    line-height: 1;
+    color: #6b7280;
+    background: #fafafa;
+    border: 1px solid #e5e7eb;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    z-index: 2000;
+  }
+  .view-toggle-btn:hover { background:#f3f4f6; }
+  .hidden-view { display:none !important; }
+  .setup-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    z-index: 1800;
+  }
+  .setup-backdrop.open { display:flex; }
+  .setup-modal {
+    width: 100%;
+    max-width: 460px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    padding: 18px;
+  }
+  .setup-grid { display:grid; gap:12px; }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: 12px;
+    margin-bottom: 15px;
+  }
+  .stat-card {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .stat-big {
+    font-size: 28px;
+    font-weight: bold;
+    line-height: 1;
+  }
+  .rank-row {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 0;
+    border-top:1px solid #e5e7eb;
+  }
+
+
+  .settings-toggle-btn{
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  min-height: 24px;
+  border-radius: 999px;
+  font-size: 11px;
+  line-height: 1;
+  color: #6b7280;
+  background: #fafafa;
+  border: 1px solid #e5e7eb;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+  .settings-toggle-btn:hover { background:#f3f4f6; }
+  .difficulty-picker {
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+    margin-top:6px;
+  }
+  .difficulty-btn {
+    width:36px;
+    height:36px;
+    border-radius:999px;
+    padding:0;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+    border:1px solid #d1d5db;
+    background:white;
+  }
+  .difficulty-btn.active {
+    background:#111827;
+    color:white;
+    border-color:#111827;
+  }
+  .balance-wrap {
+    background:#e5e7eb;
+    border-radius:999px;
+    height:18px;
+    overflow:hidden;
+    position:relative;
+    margin-top:10px;
+  }
+  .balance-center {
+    position:absolute;
+    left:50%;
+    top:0;
+    bottom:0;
+    width:2px;
+    background:#fff;
+    transform:translateX(-1px);
+    z-index:2;
+  }
+  .balance-left, .balance-right {
+    position:absolute;
+    top:0;
+    bottom:0;
+  }
+  .balance-left {
+    right:50%;
+    background:#111827;
+  }
+  .balance-right {
+    left:50%;
+    background:#22c55e;
+  }
+  .balance-labels {
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    margin-top:8px;
+    font-size:13px;
+  }
+
+
+  .balance-side-label {
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    font-size:11px;
+    font-weight:700;
+    color:#111827;
+    z-index:3;
+    pointer-events:none;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.35);
+  }
+  .balance-side-label.left { left:8px; }
+  .balance-side-label.right { right:8px; }
+
+
+  .topbar {
+    justify-content: flex-start;
+    gap: 10px;
+  }
+  .top-nav-switch {
+    display: flex;
+    gap: 10px;
+    margin: 0 auto;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+  }
+  .top-nav-btn {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    border-radius: 999px;
+    border: 1px solid #e5e7eb;
+    background: #fafafa;
+    color: #6b7280;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    line-height: 1;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    transition: transform 0.18s ease, background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+    padding: 0;
+  }
+  .top-nav-btn:hover {
+    transform: translateY(-1px);
+    background: #f3f4f6;
+  }
+  .top-nav-btn.active {
+    background: #111827;
+    color: white;
+    border-color: #111827;
+    transform: translateY(-1px) scale(1.06);
+    box-shadow: 0 6px 14px rgba(17,24,39,0.18);
+  }
+  body.dark-mode .top-nav-btn {
+    background: #374151;
+    color: #e5e7eb;
+    border-color: #4b5563;
+  }
+  body.dark-mode .top-nav-btn.active {
+    background: #ffffff;
+    color: #111827;
+    border-color: #ffffff;
+  }
+
+
+  .category-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 6px;
+  }
+  .category-btn {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    justify-content:flex-start;
+    padding:10px 12px;
+    border-radius:12px;
+    border:1px solid #d1d5db;
+    background:white;
+    font-size:14px;
+  }
+  .category-btn.active {
+    background:#111827;
+    color:white;
+    border-color:#111827;
+  }
+  .category-icon {
+    width: 22px;
+    display:inline-flex;
+    justify-content:center;
+    flex:0 0 22px;
+  }
+  .reminder-badge {
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:12px;
+    color:#6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    margin-top: 2px;
+  }
+
+
+  .reminder-summary {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .reminder-summary-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 14px;
+    padding: 8px 0;
+    border-top: 1px solid #f1f5f9;
+  }
+  .reminder-summary-row:first-child {
+    border-top: none;
+    padding-top: 0;
+  }
+  .reminder-summary-type {
+    min-width: 110px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #4b5563;
+    text-transform: uppercase;
+    line-height: 1.2;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .reminder-summary-dots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-start;
+    flex: 1;
+  }
+  .reminder-summary-item {
+    width: 52px;
+    text-align: center;
+    font-size: 10px;
+    color: #4b5563;
+    line-height: 1.15;
+  }
+  .reminder-summary-item .dot {
+    display:block;
+    margin: 0 auto 4px auto;
+  }
+
+
+  .summary-dynamic {
+    transition: background-color 0.25s ease;
+  }
+  .summary-percent-row {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+
+
+.highlight-task{
+  box-shadow: 0 0 0 2px #60a5fa, 0 0 0 6px rgba(96,165,250,0.18);
+  transition: box-shadow 0.2s ease;
+}
+
+
+.house-container{
+  display:flex;
+  justify-content:center;
+  margin:10px 0 8px 0;
+}
+
+.house-img{
+  width:110px;
+  height:110px;
+  image-rendering: pixelated;
+  transition: transform 0.3s ease, opacity 0.2s ease;
+  opacity: 1;
+}
+
+.house-img.evolve{
+  transform: scale(1.08);
+}
+
+
+@keyframes houseIdleBounce {
+  0% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-5px) scale(1.02); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+.house-img {
+  animation: houseIdleBounce 2.5s ease-in-out infinite;
+}
+
+
+.header-fixed{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 4000;
+  background: #f3f3f3;
+  padding: 16px 16px 6px 16px;
+  box-sizing: border-box;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+}
+
+body{
+  padding-top: 122px;
+}
+
+body.dark-mode .header-fixed{
+  background:#1f2937;
+}
+
+body.dark-mode .header-fixed .topbar,
+body.dark-mode .header-fixed .app-logo-wrap{
+  background: transparent;
+}
+
+
+#tasksView,
+#remindersView,
+#statsView{
+  padding-top: 56px;
+  box-sizing: border-box;
+}
+
+
+.house-img{
+  transition: transform 0.3s ease, opacity 0.35s ease;
+}
+.house-img.fade-changing{
+  opacity: 0;
+}
+
+</style>
+</head>
+<body>
+
+<div class="header-fixed">
+<div class="app-logo-wrap">
+  <img src="logo.png" alt="Logo PocilgAPP" class="header-logo-img">
+  <div class="logo-text-block">
+    <div class="logo-container">
+      <h1 class="app-logo-pro"><span class="logo-main-pro">POCILG</span><span class="logo-accent-pro">APP</span></h1>
+    </div>
+    <div class="app-logo-sub">control de limpieza doméstica</div>
+  </div>
+</div>
+
+<div class="topbar">
+  <button id="themeToggle" class="theme-toggle-btn" title="Cambiar modo"></button>
+  <button id="settingsToggle" class="settings-toggle-btn" title="Ajustes">⚙️</button>
+  <button class="add-icon-btn round-add-btn" onclick="openAddModal()" title="Añadir tarea">＋</button>
+  <div class="top-nav-switch">
+    <button id="navTasks" class="top-nav-btn active" title="Tareas">🧽</button>
+    <button id="navStats" class="top-nav-btn" title="Estadísticas">📊</button>
+    <button id="navReminders" class="top-nav-btn" title="Recordatorios">⏰</button>
+  </div>
+
+</div>
+
+
+</div>
+
+
+<div id="tasksView">
+<div id="critical"></div>
+<div id="summary"></div>
+
+<div class="controls" id="tasksControls">
+  <div class="mini-group" id="sortGroup">
+    <button type="button" id="sortToggle" class="mini-icon" title="Ordenar">↕️</button>
+    <div id="sortCurrent" class="sort-current"></div>
+  </div>
+  <div class="mini-group" id="filterGroup">
+    <button type="button" id="filterToggle" class="mini-icon" title="Filtrar">🔎</button>
+    <div id="filterCurrent" class="filter-current"></div><button id="filterAllQuick" class="filter-current" onclick="setFilter('all')">Todas</button>
+  </div>
+</div>
+
+<div id="tasks"></div>
+</div>
+
+<div id="remindersView" class="hidden-view">
+  <div id="remindersCritical"></div>
+  <div id="remindersSummary"></div>
+  <div class="controls" id="remindersControls">
+    <div class="mini-group" id="reminderFilterGroup">
+      <button type="button" id="reminderFilterToggle" class="mini-icon" title="Filtrar recordatorios">🔎</button>
+      <div id="reminderFilterCurrent" class="filter-current"></div><button id="reminderFilterAllQuick" class="filter-current" onclick="setReminderFilter('all')">Todos</button>
+    </div>
+  </div>
+  <div id="reminders"></div>
+</div>
+
+<div id="statsView" class="hidden-view">
+  <div class="card">
+    <div class="task-title">Diferencia de puntos</div>
+    <div id="balanceHeadline" class="stat-big">0</div>
+    <div id="balanceSubtext" class="meta">Todavía no hay diferencia.</div>
+    <div class="balance-wrap">
+      <div class="balance-center"></div>
+      <div id="balanceLeft" class="balance-left" style="width:0%;"></div>
+      <div id="balanceRight" class="balance-right" style="width:0%;"></div>
+      <div id="balanceInsideLeft" class="balance-side-label left">—</div>
+      <div id="balanceInsideRight" class="balance-side-label right">—</div>
+    </div>
+    <div class="balance-labels">
+      <div id="balanceLeftLabel">—</div>
+      <div id="balanceRightLabel">—</div>
+    </div>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="meta-label">Limpiezas totales</div>
+      <div id="statTotalCleans" class="stat-big">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="meta-label">Puntos totales</div>
+      <div id="statTotalPoints" class="stat-big">0</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="task-title">Ranking</div>
+    <div id="rankingBox"></div>
+  </div>
+  <div class="card">
+    <div class="task-title">Últimas limpiezas</div>
+    <div id="historyBox"></div>
+  </div>
+  <div class="card">
+    <div class="task-title">Acciones</div>
+    <div class="actions">
+      <div class="action-left">
+        <button id="resetPointsBtn" class="danger">Resetear puntos</button>
+        <button class="danger" onclick="resetAllLastDates()">Borrar fechas</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="setupBackdrop" class="setup-backdrop">
+  <div class="setup-modal">
+    <h3>Ajustes del hogar compartido</h3>
+    <div class="setup-grid">
+      <div class="field">
+        <label for="homeCodeInput">Código de vivienda</label>
+        <input id="homeCodeInput" type="text" placeholder="Ej. casa-dani" />
+      </div>
+      <div class="field">
+        <label for="userNameInput">Tu nombre en este móvil</label>
+        <input id="userNameInput" type="text" placeholder="Ej. Dani" />
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button id="saveSetupBtn" class="primary">Guardar</button>
+    </div>
+  </div>
+</div>
+<div id="bubbleLayer" class="bubble-layer"></div>
+<div id="sparkleLayer" class="sparkle-layer"></div>
+
+<div id="sortPopupBackdrop" class="popup-backdrop">
+  <div class="popup-card">
+    <div class="popup-title">Ordenar por</div>
+    <div id="sortPopupOptions" class="popup-options"></div>
+  </div>
+</div>
+
+<div id="filterPopupBackdrop" class="popup-backdrop">
+  <div class="popup-card">
+    <div class="popup-title">Filtrar por estancia</div>
+    <div id="filterPopupOptions" class="popup-options"></div>
+  </div>
+</div>
+
+<div id="reminderFilterPopupBackdrop" class="popup-backdrop">
+  <div class="popup-card">
+    <div class="popup-title">Filtrar recordatorios</div>
+    <div id="reminderFilterPopupOptions" class="popup-options"></div>
+  </div>
+</div>
+
+<div id="taskModalBackdrop" class="modal-backdrop">
+  <div class="modal">
+    <h3 id="modalTitle">Editar tarea</h3>
+    <div class="form-grid">
+      <div class="field">
+        <label for="taskName">Nombre</label>
+        <input id="taskName" type="text" />
+      </div>
+      <div class="field">
+        <label for="taskRoom">Estancia</label>
+        <input id="taskRoom" type="text" />
+      </div>
+      <div class="field">
+        <label for="taskDays">Frecuencia de limpieza (días)</label>
+        <input id="taskDays" type="number" min="1" />
+      </div>
+      <div class="field">
+        <label for="taskLast">Última limpieza</label>
+        <input id="taskLast" type="date" />
+      </div>
+      <div class="field">
+        <label>Nivel de dificultad</label>
+        <div id="difficultyPicker" class="difficulty-picker"></div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button onclick="closeTaskModal()">Cancelar</button>
+      <button class="primary" onclick="saveTaskFromModal()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<div id="reminderModalBackdrop" class="modal-backdrop">
+  <div class="modal">
+    <h3 id="reminderModalTitle">Editar recordatorio</h3>
+    <div class="form-grid">
+      <div class="field">
+        <label for="reminderName">Nombre</label>
+        <input id="reminderName" type="text" />
+      </div>
+      <div class="field">
+        <label for="reminderDays">Frecuencia orientativa (días)</label>
+        <input id="reminderDays" type="number" min="1" />
+      </div>
+      <div class="field">
+        <label for="reminderLast">Última vez</label>
+        <input id="reminderLast" type="date" />
+      </div>
+      <div class="field">
+        <label>Tipo</label>
+        <div id="reminderCategoryGrid" class="category-grid"></div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button onclick="closeReminderModal()">Cancelar</button>
+      <button class="primary" onclick="saveReminderFromModal()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js">
+function scrollToTask(taskId){
+  const el = document.querySelector(`[data-task-id="${taskId}"]`) || document.getElementById(`task-${taskId}`);
+  if(!el) return;
+  if (currentView !== "tasks") {
+    currentView = "tasks";
+    updateViewUI();
+    if (typeof updateTopNav === "function") updateTopNav();
+  }
+  setTimeout(() => {
+    const target = document.querySelector(`[data-task-id="${taskId}"]`) || document.getElementById(`task-${taskId}`);
+    if(!target) return;
+    target.scrollIntoView({behavior:'smooth', block:'center'});
+    target.classList.add('highlight-task');
+    setTimeout(()=> target.classList.remove('highlight-task'), 1000);
+  }, 50);
+}
+
+
+function scrollToReminder(reminderId){
+  const el = document.querySelector(`[data-reminder-id="${reminderId}"]`);
+  if(!el) return;
+
+  if (currentView !== "reminders") {
+    currentView = "reminders";
+    updateViewUI();
+    if (typeof updateTopNav === "function") updateTopNav();
+  }
+
+  setTimeout(() => {
+    const target = document.querySelector(`[data-reminder-id="${reminderId}"]`);
+    if(!target) return;
+    target.scrollIntoView({behavior:'smooth', block:'center'});
+    target.classList.add('highlight-task');
+    setTimeout(()=> target.classList.remove('highlight-task'), 1000);
+  }, 50);
+}
+
+</script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js">
+function scrollToTask(taskId){
+  const el = document.querySelector(`[data-task-id="${taskId}"]`);
+  if(!el) return;
+  el.scrollIntoView({behavior:'smooth', block:'center'});
+  el.classList.add('highlight-task');
+  setTimeout(()=> el.classList.remove('highlight-task'), 800);
+}
+
+
+function scrollToReminder(reminderId){
+  const el = document.querySelector(`[data-reminder-id="${reminderId}"]`);
+  if(!el) return;
+
+  if (currentView !== "reminders") {
+    currentView = "reminders";
+    updateViewUI();
+    if (typeof updateTopNav === "function") updateTopNav();
+  }
+
+  setTimeout(() => {
+    const target = document.querySelector(`[data-reminder-id="${reminderId}"]`);
+    if(!target) return;
+    target.scrollIntoView({behavior:'smooth', block:'center'});
+    target.classList.add('highlight-task');
+    setTimeout(()=> target.classList.remove('highlight-task'), 1000);
+  }, 50);
+}
+
+</script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBpJEXPvKKbJqFS73W8mq-A1QrR27bALcM",
+  authDomain: "pocilgapp.firebaseapp.com",
+  databaseURL: "https://pocilgapp-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "pocilgapp",
+  storageBucket: "pocilgapp.firebasestorage.app",
+  messagingSenderId: "311952273875",
+  appId: "1:311952273875:web:f94ad9c36562ac80707f26"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+function scrollToTask(taskId){
+  const el = document.querySelector(`[data-task-id="${taskId}"]`);
+  if(!el) return;
+  el.scrollIntoView({behavior:'smooth', block:'center'});
+  el.classList.add('highlight-task');
+  setTimeout(()=> el.classList.remove('highlight-task'), 800);
+}
+
+
+function scrollToReminder(reminderId){
+  const el = document.querySelector(`[data-reminder-id="${reminderId}"]`);
+  if(!el) return;
+
+  if (currentView !== "reminders") {
+    currentView = "reminders";
+    updateViewUI();
+    if (typeof updateTopNav === "function") updateTopNav();
+  }
+
+  setTimeout(() => {
+    const target = document.querySelector(`[data-reminder-id="${reminderId}"]`);
+    if(!target) return;
+    target.scrollIntoView({behavior:'smooth', block:'center'});
+    target.classList.add('highlight-task');
+    setTimeout(()=> target.classList.remove('highlight-task'), 1000);
+  }, 50);
+}
+
+</script>
+
+<script>
+const STORAGE_KEY = "limpieza_casa_app_v14";
+const SORT_KEY = "limpieza_casa_sort_v14";
+const FILTER_KEY = "limpieza_casa_filter_v14";
+const HOME_KEY = "pocilg_home_code_v1";
+const USER_KEY = "pocilg_user_name_v1";
+const VIEW_KEY = "pocilg_current_view_v1";
+const CLEAN_HIGHLIGHT_MS = 24 * 60 * 60 * 1000;
+
+const defaultTasks = [
+  {id: crypto.randomUUID(), name:"Arenero gato", room:"Mascotas", days:15, last:null},
+  {id: crypto.randomUUID(), name:"Lavabo", room:"Baño", days:21, last:null},
+  {id: crypto.randomUUID(), name:"Sábanas", room:"Dormitorio", days:30, last:null},
+  {id: crypto.randomUUID(), name:"Ducha", room:"Baño", days:60, last:null},
+  {id: crypto.randomUUID(), name:"Muebles", room:"Salón", days:30, last:null},
+  {id: crypto.randomUUID(), name:"Suelo", room:"General", days:30, last:null},
+  {id: crypto.randomUUID(), name:"Aspirar", room:"General", days:2, last:null}
+];
+
+const sortOptions = [
+  { value: "urgency", label: "Urgencia" },
+  { value: "room", label: "Estancia" },
+  { value: "name", label: "Nombre" },
+  { value: "frequency", label: "Frecuencia" }
+];
+
+let tasks = [];
+let currentSort = loadSort();
+let currentFilter = loadFilter();
+let editingTaskId = null;
+let animatedTaskId = null;
+let frozenOrderIds = null;
+let historyEvents = [];
+let homeCode = localStorage.getItem(HOME_KEY) || "";
+let currentUserName = localStorage.getItem(USER_KEY) || "";
+let currentView = localStorage.getItem(VIEW_KEY) || "tasks";
+let selectedDifficulty = 1;
+let reminders = [];
+let editingReminderId = null;
+let selectedReminderCategory = "generic";
+let currentReminderFilter = "all";
+
+function loadTasks() {
+  return [];
+}
+
+function saveTasks() {
+  if (!homeCode) return;
+  db.ref(getHomePath("tasks")).set(tasks);
+}
+
+function loadSort() {
+  return localStorage.getItem(SORT_KEY) || "urgency";
+}
+
+function saveSort() {
+  localStorage.setItem(SORT_KEY, currentSort);
+}
+
+function loadFilter() {
+  return localStorage.getItem(FILTER_KEY) || "all";
+}
+
+function saveFilter() {
+  localStorage.setItem(FILTER_KEY, currentFilter);
+}
+
+function sanitizeHomeCode(code) {
+  return String(code || "").trim().replace(/[.#$\[\]/]/g, "_").replace(/\s+/g, "-");
+}
+
+function getHomePath(section) {
+  return `homes/${sanitizeHomeCode(homeCode)}/${section}`;
+}
+
+function difficultyIcons(level) {
+  return "🧹".repeat(level);
+}
+const reminderCategories = {
+  pets: { label: "Mascotas", icon: "🐾" },
+  plants: { label: "Plantas", icon: "🪴" },
+  mattress: { label: "Colchón", icon: "🛏️" },
+  dentist: { label: "Dentista", icon: "🦷" },
+  generic: { label: "Genérico", icon: "⏰" }
+};
+
+function getRemindersPath() {
+  return `homes/${sanitizeHomeCode(homeCode)}/reminders`;
+}
+
+function getReminderCategoryMeta(category) {
+  return reminderCategories[category] || reminderCategories.generic;
+}
+
+function getReminderActionIcon(category) {
+  if (category === "pets") return "🐶";
+  if (category === "plants") return "🚿";
+  if (category === "dentist") return "🧑‍⚕️";
+  return "🪄";
+}
+
+function renderReminderCategoryPicker() {
+  const grid = document.getElementById("reminderCategoryGrid");
+  if (!grid) return;
+  grid.innerHTML = Object.entries(reminderCategories).map(([key, meta]) => `
+    <button type="button" class="category-btn ${selectedReminderCategory === key ? "active" : ""}" data-reminder-category="${key}">
+      <span class="category-icon">${meta.icon}</span>
+      <span>${meta.label}</span>
+    </button>
+  `).join("");
+}
+
+function getReminderFilterOptions() {
+  const present = [...new Set(reminders.map(r => r.category || "generic"))];
+  return ["all", ...present];
+}
+
+function renderReminderFilterControl() {
+  const currentMeta = currentReminderFilter === "all"
+    ? { label: "Todos" }
+    : getReminderCategoryMeta(currentReminderFilter);
+  const currentEl = document.getElementById("reminderFilterCurrent");
+  const quickAll = document.getElementById("reminderFilterAllQuick");
+  const popup = document.getElementById("reminderFilterPopupOptions");
+  if (!currentEl || !quickAll || !popup) return;
+
+  currentEl.textContent = currentMeta.label;
+  quickAll.style.display = currentReminderFilter === "all" ? "none" : "inline-block";
+
+  const options = getReminderFilterOptions().map(key => {
+    if (key === "all") return { value: "all", label: "Todos" };
+    const meta = getReminderCategoryMeta(key);
+    return { value: key, label: `${meta.icon} ${meta.label}` };
+  });
+
+  popup.innerHTML = options.map(option => `
+    <button type="button" class="popup-option ${option.value === currentReminderFilter ? "current" : ""}" data-reminder-filter="${option.value}">
+      ${option.label}
+    </button>
+  `).join("");
+}
+
+function setReminderFilter(value) {
+  currentReminderFilter = value;
+  renderReminderFilterControl();
+  renderReminders();
+  closeReminderFilterPopup();
+}
+
+function openReminderFilterPopup() {
+  renderReminderFilterControl();
+  document.getElementById("reminderFilterPopupBackdrop").classList.add("open");
+}
+
+function closeReminderFilterPopup() {
+  document.getElementById("reminderFilterPopupBackdrop").classList.remove("open");
+}
+
+function renderRemindersSummary() {
+  const container = document.getElementById("remindersSummary");
+  if (!container) return;
+
+  const source = currentReminderFilter === "all"
+    ? reminders
+    : reminders.filter(r => (r.category || "generic") === currentReminderFilter);
+
+  if (!source.length) {
+    container.innerHTML = "";
+    return;
+  }
+
+  const grouped = {};
+  source.forEach(r => {
+    const key = r.category || "generic";
+    if (!grouped[key]) grouped[key] = [];
+    grouped[key].push(r);
+  });
+
+  const order = ["pets", "plants", "mattress", "dentist", "generic"];
+  const entries = Object.entries(grouped).sort((a, b) => {
+    const ai = order.indexOf(a[0]);
+    const bi = order.indexOf(b[0]);
+    return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi);
+  });
+
+  let summaryHtml = `<div class="reminder-summary">
+    <div class="summary-header">
+      <div><b>Resumen rápido</b></div>
+      <div class="summary-right"></div>
+    </div>`;
+
+  entries.forEach(([category, items]) => {
+    const meta = getReminderCategoryMeta(category);
+    const sortedItems = [...items].sort((a, b) => {
+      const ap = getProgressInfo({ last: a.last, days: a.days }).urgencyScore;
+      const bp = getProgressInfo({ last: b.last, days: b.days }).urgencyScore;
+      return bp - ap;
+    });
+
+    summaryHtml += `<div class="reminder-summary-row">
+      <div class="reminder-summary-type"><span>${meta.icon}</span><span>${meta.label}</span></div>
+      <div class="reminder-summary-dots">`;
+
+    sortedItems.forEach((r) => {
+      const { progress } = getProgressInfo({ last: r.last, days: r.days });
+      const color = progressToColor(progress);
+      summaryHtml += `
+        <div class="reminder-summary-item" title="${r.name}" onclick="scrollToReminder('${r.id}')" style="cursor:pointer;">
+          <span class="dot" style="background:${color}"></span>
+          <div>${r.name}</div>
+        </div>
+      `;
+    });
+
+    summaryHtml += `</div></div>`;
+  });
+
+  summaryHtml += `</div>`;
+  container.innerHTML = summaryHtml;
+}
+
+function renderReminders() {
+  const container = document.getElementById("reminders");
+  const criticalEl = document.getElementById("remindersCritical");
+  if (!container) return;
+  container.innerHTML = "";
+  renderRemindersSummary();
+  renderReminderFilterControl();
+
+  const source = currentReminderFilter === "all"
+    ? reminders
+    : reminders.filter(r => (r.category || "generic") === currentReminderFilter);
+
+  const criticalCount = source.filter(r => {
+    const percent = Math.max(0, Math.min(100, Math.round((1 - getProgressInfo({ last: r.last, days: r.days }).progress) * 100)));
+    return percent < 5;
+  }).length;
+
+  if (criticalEl) {
+    if (source.length && criticalCount > 0) {
+      criticalEl.innerHTML = `<div class="critical-banner">⚠️ ${criticalCount} recordatorio(s) críticos</div>`;
+    } else {
+      criticalEl.innerHTML = `<div class="critical-banner good">✔️ Todo en orden</div>`;
+    }
+  }
+
+  if (!source.length) {
+    container.innerHTML = `<div class="empty">No hay recordatorios todavía.</div>`;
+    return;
+  }
+
+  const sorted = [...source].sort((a, b) => {
+    const ap = getProgressInfo({ last: a.last, days: a.days }).urgencyScore;
+    const bp = getProgressInfo({ last: b.last, days: b.days }).urgencyScore;
+    return bp - ap;
+  });
+
+  sorted.forEach((r) => {
+    const meta = getReminderCategoryMeta(r.category);
+    const { elapsed, progress, overdue } = getProgressInfo({ last: r.last, days: r.days });
+    const percent = Math.max(0, Math.min(100, Math.round((1 - progress) * 100)));
+    const fillColor = progressToColor(progress);
+    const realIndex = reminders.findIndex(item => item.id === r.id);
+
+    const card = document.createElement("div");
+    card.className = `card ${isJustCleaned(r) ? "just-cleaned" : ""} ${animatedTaskId === r.id ? "sponge-hit" : ""}`;
+    card.dataset.reminderId = r.id;
+    card.innerHTML = `
+      <div class="task-header">
+        <div class="task-title">${r.name}</div>
+        <div class="reminder-badge"><span>${meta.icon}</span><span>${meta.label}</span></div>
+      </div>
+      <div class="meta-row"><span class="meta-icon">📅</span><span class="meta-label">Última vez:</span> <span class="meta-value">${formatDate(r.last)}</span></div>
+      <div class="meta-row"><span class="meta-icon">⏳</span><span class="meta-label">Frecuencia:</span> <span class="meta-value">cada ${formatDays(r.days)}</span></div>
+      <div class="meta" style="margin-top:8px;"><span class="meta-icon">✨</span> <span class="meta-label">Estado actual:</span> <span class="meta-value ${percent>=60 ? "state-good" : percent>=25 ? "state-warning" : "state-bad"}">${percent>=60 ? "👌" : percent>=25 ? "😐" : percent>=5 ? "😢" : "<span class=\"poop-shake-once\">💩</span>"} ${percent}% al día</span></div>
+      <div class="bar">
+        <div class="fill ${elapsed>=r.days?'red':''}" style="width:${progress*100}%; background:${fillColor}"></div>
+        ${overdue>0 ? `<div class="over" style="width:${Math.min(overdue/r.days,1)*100}%"></div>` : ""}
+      </div>
+      <div class="meta">
+        ${elapsed >= r.days ? `Lleva ${formatDays(overdue)} de retraso` : `Quedan ${formatDays(r.days - elapsed)}`}
+      </div>
+      <div class="actions">
+        <div class="action-left">
+          <button type="button" class="icon-btn" onclick="openEditReminderModal(${realIndex})" title="Editar">✏️</button>
+          <button type="button" class="icon-btn danger-icon" onclick="deleteReminder(${realIndex})" title="Borrar">🗑️</button>
+        </div>
+        <div class="action-right">
+          <button type="button" class="icon-btn primary-icon clean-big ${animatedTaskId === r.id ? "sponge-animate" : ""}" onclick="completeReminder(${realIndex})" title="Actualizar">${getReminderActionIcon(r.category)}</button>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function renderDifficultyPicker() {
+  const picker = document.getElementById("difficultyPicker");
+  if (!picker) return;
+  picker.innerHTML = [1,2,3,4,5].map(level => `
+    <button type="button" class="difficulty-btn ${selectedDifficulty >= level ? "active" : ""}" data-difficulty="${level}" title="Dificultad ${level}">
+      🧹
+    </button>
+  `).join("");
+}
+
+document.addEventListener("click", function(e) {
+  const btn = e.target.closest("[data-difficulty]");
+  if (btn) {
+    selectedDifficulty = Number(btn.dataset.difficulty);
+    renderDifficultyPicker();
+    return;
+  }
+  const categoryBtn = e.target.closest("[data-reminder-category]");
+  if (categoryBtn) {
+    selectedReminderCategory = categoryBtn.dataset.reminderCategory;
+    renderReminderCategoryPicker();
+  }
+});
+
+function pointsForTask(task) {
+  const difficulty = Number(task.difficulty || 1);
+  return difficulty;
+}
+
+function startRealtimeSync() {
+  if (!homeCode) return;
+
+  db.ref(getHomePath("tasks")).off();
+  db.ref(getHomePath("history")).off();
+
+  db.ref(getHomePath("tasks")).on("value", (snapshot) => {
+    const data = snapshot.val();
+    if (data && Array.isArray(data) && data.length) {
+      tasks = data;
+    } else if (data && !Array.isArray(data)) {
+      tasks = Object.values(data);
+    } else {
+      tasks = defaultTasks.map(t => ({difficulty: 1, ...t}));
+      db.ref(getHomePath("tasks")).set(tasks);
+    }
+    frozenOrderIds = null;
+    render();
+  });
+
+  db.ref(getHomePath("history")).on("value", (snapshot) => {
+    const data = snapshot.val();
+    historyEvents = data ? Object.values(data) : [];
+    renderStats();
+  });
+
+  db.ref(getRemindersPath()).on("value", (snapshot) => {
+    const data = snapshot.val();
+    reminders = data ? Object.values(data) : [];
+    renderReminders();
+  });
+}
+
+function openSetup() {
+  document.getElementById("homeCodeInput").value = homeCode;
+  document.getElementById("userNameInput").value = currentUserName;
+  document.getElementById("setupBackdrop").classList.add("open");
+}
+
+function closeSetup() {
+  document.getElementById("setupBackdrop").classList.remove("open");
+}
+
+function updateViewUI() {
+  const tasksView = document.getElementById("tasksView");
+  const statsView = document.getElementById("statsView");
+  const remindersView = document.getElementById("remindersView");
+  const tasksControls = document.getElementById("tasksControls");
+  const remindersControls = document.getElementById("remindersControls");
+
+  if (currentView === "stats") {
+    tasksView.classList.add("hidden-view");
+    statsView.classList.remove("hidden-view");
+    remindersView.classList.add("hidden-view");
+    if (tasksControls) tasksControls.classList.add("hidden-view");
+    if (remindersControls) remindersControls.classList.add("hidden-view");
+  } else if (currentView === "reminders") {
+    tasksView.classList.add("hidden-view");
+    statsView.classList.add("hidden-view");
+    remindersView.classList.remove("hidden-view");
+    if (tasksControls) tasksControls.classList.add("hidden-view");
+    if (remindersControls) remindersControls.classList.remove("hidden-view");
+  } else {
+    tasksView.classList.remove("hidden-view");
+    statsView.classList.add("hidden-view");
+    remindersView.classList.add("hidden-view");
+    if (tasksControls) tasksControls.classList.remove("hidden-view");
+    if (remindersControls) remindersControls.classList.add("hidden-view");
+  }
+  localStorage.setItem(VIEW_KEY, currentView);
+}
+
+function renderStats() {
+  const totalCleans = historyEvents.length;
+  const totalPoints = historyEvents.reduce((sum, e) => sum + (e.points || 0), 0);
+  document.getElementById("statTotalCleans").textContent = String(totalCleans);
+  document.getElementById("statTotalPoints").textContent = String(totalPoints);
+
+  const ranking = {};
+  historyEvents.forEach(e => {
+    const name = e.user || "Sin nombre";
+    if (!ranking[name]) ranking[name] = { cleans: 0, points: 0 };
+    ranking[name].cleans += 1;
+    ranking[name].points += e.points || 0;
+  });
+
+  const rankingEntries = Object.entries(ranking)
+    .sort((a, b) => b[1].points - a[1].points || b[1].cleans - a[1].cleans);
+
+  const left = rankingEntries[0] || ["—", {cleans:0, points:0}];
+  const right = rankingEntries[1] || ["—", {cleans:0, points:0}];
+  const leftPoints = left[1].points || 0;
+  const rightPoints = right[1].points || 0;
+  const diff = Math.abs(leftPoints - rightPoints);
+
+  document.getElementById("balanceHeadline").textContent = `${diff} pts`;
+  if (rankingEntries.length >= 2) {
+    const winner = leftPoints === rightPoints ? "Empate" : (leftPoints > rightPoints ? left[0] : right[0]);
+    document.getElementById("balanceSubtext").textContent = winner === "Empate" ? "Vais empatados." : `${winner} va por delante.`;
+  } else if (rankingEntries.length === 1) {
+    document.getElementById("balanceSubtext").textContent = `${left[0]} lleva todos los puntos por ahora.`;
+  } else {
+    document.getElementById("balanceSubtext").textContent = "Todavía no hay puntos.";
+  }
+
+  const maxDiff = 50;
+  const intensity = Math.min(diff / maxDiff, 1);
+
+  const leftBar = document.getElementById("balanceLeft");
+  const rightBar = document.getElementById("balanceRight");
+  const leftLabelInside = document.getElementById("balanceInsideLeft");
+  const rightLabelInside = document.getElementById("balanceInsideRight");
+
+  leftLabelInside.textContent = left[0];
+  rightLabelInside.textContent = right[0];
+
+  const fillPercent = 8 + (42 * intensity);
+
+  if (leftPoints === rightPoints) {
+    const beige = `hsl(45, ${20 + intensity*20}%, ${82 - intensity*8}%)`;
+    leftBar.style.width = "50%";
+    rightBar.style.width = "50%";
+    leftBar.style.background = beige;
+    rightBar.style.background = beige;
+  } else if (leftPoints > rightPoints) {
+    leftBar.style.width = `${fillPercent}%`;
+    rightBar.style.width = `${fillPercent}%`;
+    leftBar.style.background = `hsl(140, ${35 + intensity*45}%, ${75 - intensity*28}%)`;
+    rightBar.style.background = `hsl(0, ${35 + intensity*45}%, ${82 - intensity*24}%)`;
+  } else {
+    leftBar.style.width = `${fillPercent}%`;
+    rightBar.style.width = `${fillPercent}%`;
+    leftBar.style.background = `hsl(0, ${35 + intensity*45}%, ${82 - intensity*24}%)`;
+    rightBar.style.background = `hsl(140, ${35 + intensity*45}%, ${75 - intensity*28}%)`;
+  }
+
+  document.getElementById("balanceLeftLabel").textContent = `${left[0]} · ${leftPoints} pts`;
+  document.getElementById("balanceRightLabel").textContent = `${right[0]} · ${rightPoints} pts`;
+
+  const rankingRows = rankingEntries
+    .map(([name, stats], i) => `
+      <div class="rank-row" style="${i === 0 ? "border-top:none;" : ""}">
+        <div><strong>${name}</strong><div class="meta">${stats.cleans} limpiezas</div></div>
+        <div><strong>${stats.points}</strong> pts</div>
+      </div>
+    `).join("") || '<div class="meta">Todavía no hay datos.</div>';
+
+  document.getElementById("rankingBox").innerHTML = rankingRows;
+
+  const historyRows = [...historyEvents]
+    .sort((a, b) => (b.at || 0) - (a.at || 0))
+    .slice(0, 20)
+    .map((e, i) => `
+      <div class="rank-row" style="${i === 0 ? "border-top:none;" : ""}">
+        <div><strong>${e.user || "Sin nombre"}</strong> limpió <strong>${e.taskName || "Tarea"}</strong></div>
+        <div class="meta">${new Date(e.at || Date.now()).toLocaleString("es-ES")} · ${e.points || 0} pts</div>
+      </div>
+    `).join("") || '<div class="meta">Todavía no hay historial.</div>';
+
+  document.getElementById("historyBox").innerHTML = historyRows;
+}
+
+function daysSince(date){
+  if(!date) return null;
+  return Math.floor((Date.now() - date) / 86400000);
+}
+
+function formatDate(ts) {
+  if (!ts) return "Nunca";
+  return new Date(ts).toLocaleDateString("es-ES");
+}
+
+function formatDays(days) {
+  const safeDays = Math.max(0, Number(days) || 0);
+  if (safeDays < 30) return `${safeDays} día${safeDays !== 1 ? "s" : ""}`;
+
+  const months = Math.floor(safeDays / 30);
+  const remainingDays = safeDays % 30;
+
+  let text = `${months} mes${months !== 1 ? "es" : ""}`;
+  if (remainingDays > 0) {
+    text += ` y ${remainingDays} día${remainingDays !== 1 ? "s" : ""}`;
+  }
+  return text;
+}
+
+function getHouseImage(percent){
+  if (percent >= 87) return "house_5_perfect.png";
+  if (percent >= 72) return "house_4_clean.png";
+  if (percent >= 57) return "house_3_medium.png";
+  if (percent >= 35) return "house_2_bad.png";
+  return "house_1_dirty.png";
+}
+
+function spawnHouseSparkles(el){
+  const rect = el.getBoundingClientRect();
+  for(let i=0;i<8;i++){
+    const s = document.createElement("div");
+    s.className = "sparkle";
+    s.style.left = (rect.left + Math.random()*rect.width) + "px";
+    s.style.top = (rect.top + Math.random()*rect.height) + "px";
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(),600);
+  }
+}
+
+function formatDateForInput(ts) {
+  if (!ts) return "";
+  const d = new Date(ts);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+function parseInputDate(str) {
+  if (!str) return null;
+  const parsed = new Date(str + "T12:00:00");
+  if (isNaN(parsed.getTime())) return null;
+  return parsed.getTime();
+}
+
+function getProgressInfo(task) {
+  const elapsed = task.last ? daysSince(task.last) : task.days;
+  const progress = Math.min(elapsed / task.days, 1);
+  const overdue = Math.max(elapsed - task.days, 0);
+  const urgencyScore = task.days === 0 ? 0 : elapsed / task.days;
+  return { elapsed, progress, overdue, urgencyScore };
+}
+
+function progressToColor(progress) {
+  const capped = Math.max(0, Math.min(progress, 1));
+  const hue = 120 - (120 * capped);
+  return `hsl(${hue}, 85%, 48%)`;
+}
+
+function getCleanlinessPercent(task) {
+  const { progress } = getProgressInfo(task);
+  return Math.max(0, Math.min(100, Math.round((1 - progress) * 100)));
+}
+
+function getHouseCleanPercent(taskList) {
+  if (!taskList.length) return 0;
+  const total = taskList.reduce((sum, task) => sum + getCleanlinessPercent(task), 0);
+  return Math.round(total / taskList.length);
+}
+
+function getPercentColor(percent) {
+  const progress = 1 - (percent / 100);
+  return progressToColor(progress);
+}
+
+function getRooms() {
+  return [...new Set(tasks.map(t => t.room))].sort((a, b) => a.localeCompare(b, "es"));
+}
+
+function getSortedTasks(taskList) {
+  const copied = [...taskList];
+
+  copied.sort((a, b) => {
+    if (currentSort === "name") return a.name.localeCompare(b.name, "es");
+    if (currentSort === "room") {
+      const roomCompare = a.room.localeCompare(b.room, "es");
+      if (roomCompare !== 0) return roomCompare;
+      return a.name.localeCompare(b.name, "es");
+    }
+    if (currentSort === "frequency") {
+      if (a.days !== b.days) return a.days - b.days;
+      return a.name.localeCompare(b.name, "es");
+    }
+    const aUrgency = getProgressInfo(a).urgencyScore;
+    const bUrgency = getProgressInfo(b).urgencyScore;
+    if (bUrgency !== aUrgency) return bUrgency - aUrgency;
+    return a.name.localeCompare(b.name, "es");
+  });
+
+  return copied;
+}
+
+function getFilteredTasks() {
+  const base = currentFilter === "all" ? tasks : tasks.filter(t => t.room === currentFilter);
+  return getSortedTasks(base);
+}
+
+function getDisplayTasks() {
+  const filtered = getFilteredTasks();
+  if (!frozenOrderIds) return filtered;
+  const orderMap = new Map(frozenOrderIds.map((id, index) => [id, index]));
+  return [...filtered].sort((a, b) => {
+    const ai = orderMap.has(a.id) ? orderMap.get(a.id) : Number.MAX_SAFE_INTEGER;
+    const bi = orderMap.has(b.id) ? orderMap.get(b.id) : Number.MAX_SAFE_INTEGER;
+    if (ai !== bi) return ai - bi;
+    return 0;
+  });
+}
+
+function refreshFrozenOrder() {
+  frozenOrderIds = getFilteredTasks().map(t => t.id);
+}
+
+function isJustCleaned(task) {
+  return !!task.last && (Date.now() - task.last < CLEAN_HIGHLIGHT_MS);
+}
+
+function renderSortControl() {
+  const current = sortOptions.find(option => option.value === currentSort);
+  document.getElementById("sortCurrent").textContent = current ? current.label : "Urgencia";
+
+  const popup = document.getElementById("sortPopupOptions");
+  popup.innerHTML = sortOptions.map(option => `
+    <button type="button" class="popup-option ${option.value === currentSort ? "current" : ""}" data-sort="${option.value}">
+      ${option.label}
+    </button>
+  `).join("");
+}
+
+function renderFilterControl() {
+  const rooms = getRooms();
+  const allOptions = [{ value: "all", label: "Todas" }, ...rooms.map(room => ({ value: room, label: room }))];
+  const current = allOptions.find(option => option.value === currentFilter) || allOptions[0];
+  document.getElementById("filterCurrent").textContent = current.label;
+
+  const quickAll = document.getElementById("filterAllQuick");
+  if (currentFilter === "all") {
+    quickAll.style.display = "none";
+  } else {
+    quickAll.style.display = "inline-block";
+  }
+
+  const popup = document.getElementById("filterPopupOptions");
+  popup.innerHTML = allOptions.map(option => `
+    <button type="button" class="popup-option ${option.value === currentFilter ? "current" : ""}" data-filter="${escapeHtml(option.value)}">
+      ${option.label}
+    </button>
+  `).join("");
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+function render(){
+  const criticalEl = document.getElementById("critical");
+  const container = document.getElementById("tasks");
+  const summary = document.getElementById("summary");
+
+  renderSortControl();
+  renderFilterControl();
+
+  container.innerHTML = "";
+  summary.innerHTML = "";
+
+  if (!frozenOrderIds) refreshFrozenOrder();
+  const filteredTasks = getDisplayTasks();
+
+  const urgentTasks = filteredTasks.filter(t => getCleanlinessPercent(t) < 5);
+  if (criticalEl) {
+    if (urgentTasks.length > 0) {
+      criticalEl.innerHTML = `<div class="critical-banner" onclick="goToCritical()">⚠️ ${urgentTasks.length} tarea(s) críticas</div>`;
+    } else {
+      criticalEl.innerHTML = `<div class="critical-banner good">✔️ Todo en orden</div>`;
+    }
+  }
+  const housePercent = getHouseCleanPercent(filteredTasks);
+
+  const grouped = {};
+  filteredTasks.forEach(t => {
+    if (!grouped[t.room]) grouped[t.room] = [];
+    grouped[t.room].push(t);
+  });
+
+  const groupedEntries = Object.entries(grouped)
+    .map(([room, roomTasks]) => {
+      const pendingTasks = roomTasks.filter(task => getProgressInfo(task).elapsed >= task.days);
+      const avgPendingProgress = pendingTasks.length
+        ? pendingTasks.reduce((sum, task) => sum + getProgressInfo(task).progress, 0) / pendingTasks.length
+        : -1;
+      return { room, roomTasks, pendingTasks, pendingCount: pendingTasks.length, avgPendingProgress };
+    })
+    .sort((a, b) => {
+      if (b.pendingCount !== a.pendingCount) return b.pendingCount - a.pendingCount;
+      if (b.avgPendingProgress !== a.avgPendingProgress) return b.avgPendingProgress - a.avgPendingProgress;
+      return a.room.localeCompare(b.room, "es");
+    });
+
+  const summaryBg = housePercent >= 75
+    ? `hsl(120, 45%, ${96 - ((housePercent - 75) / 25) * 10}%)`
+    : housePercent >= 40
+      ? `hsl(${50 - ((75 - housePercent) / 35) * 10}, 70%, ${95 - ((75 - housePercent) / 35) * 8}%)`
+      : `hsl(${8 + (housePercent / 40) * 12}, 75%, ${95 - ((40 - housePercent) / 40) * 8}%)`;
+
+  const summaryPercentColor = housePercent >= 75
+    ? `hsl(135, 75%, 32%)`
+    : housePercent >= 40
+      ? `hsl(32, 90%, 42%)`
+      : `hsl(0, 78%, 42%)`;
+
+  let summaryHtml = `
+    <div class="summary-header summary-dynamic" style="background:${summaryBg}; padding:12px; border-radius:12px; display:block;">
+      <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+        <div style="text-align:left;"><b>Resumen rápido</b></div>
+        <div style="text-align:right;">
+          <div class="summary-percent-row">
+            <div class="summary-percent" style="color:${summaryPercentColor}">${housePercent}%</div>
+            <div class="summary-subtext">limpia</div>
+          </div>
+        </div>
+      </div>
+      <div class="house-container" style="display:flex; justify-content:center; align-items:center; margin-top:8px;">
+        <img id="houseImage" class="house-img" src="" alt="Estado de la casa">
+      </div>
+    </div>
+  `;
+
+  summaryHtml += "<div class='reminder-summary'>";
+  groupedEntries.forEach(({ room, roomTasks, pendingTasks }) => {
+    const tasksToShow = pendingTasks.length ? pendingTasks : roomTasks;
+    summaryHtml += `<div class="reminder-summary-row"><div class="reminder-summary-type"><span>${room}</span></div><div class="reminder-summary-dots">`;
+    tasksToShow.forEach((t) => {
+      const { progress } = getProgressInfo(t);
+      const color = progressToColor(progress);
+      summaryHtml += `
+        <div class="reminder-summary-item" title="${t.name}" onclick="scrollToTask('${t.id}')" style="cursor:pointer;">
+          <span class="dot" style="background:${color}"></span>
+          <div>${t.name}</div>
+        </div>
+      `;
+    });
+    summaryHtml += `</div></div>`;
+  });
+  summaryHtml += "</div>";
+
+  const pendingByRoom = groupedEntries
+    .filter(item => item.pendingCount > 0)
+    .map(item => `${item.room}: ${item.pendingCount}`);
+
+  const pendingText = pendingByRoom.length
+    ? pendingByRoom.join(" · ")
+    : "No hay tareas pendientes";
+
+  summaryHtml += `<div class='meta' style='margin-top:10px'>Pendientes · ${pendingText}</div>`;
+  summary.innerHTML = summaryHtml;
+
+  const houseImg = document.getElementById("houseImage");
+  if (houseImg){
+    const newSrc = getHouseImage(housePercent);
+    if (!houseImg.src || !houseImg.src.includes(newSrc)){
+      houseImg.classList.add("fade-changing");
+      setTimeout(()=>{
+        houseImg.src = newSrc;
+        houseImg.classList.remove("fade-changing");
+        houseImg.classList.add("evolve");
+        setTimeout(()=>houseImg.classList.remove("evolve"), 300);
+        if (housePercent > (window.lastHousePercent || 0)){
+          spawnHouseSparkles(houseImg);
+        }
+      },180);
+    } else {
+      houseImg.src = newSrc;
+      houseImg.classList.remove("fade-changing");
+    }
+  }
+  window.lastHousePercent = housePercent;
+
+  if (!filteredTasks.length) {
+    container.innerHTML = `<div class="empty">No hay tareas para la estancia seleccionada.</div>`;
+    return;
+  }
+
+  filteredTasks.forEach((t)=>{
+    const { elapsed, progress, overdue } = getProgressInfo(t);
+    const realIndex = tasks.findIndex(task => task.id === t.id);
+    const fillColor = progressToColor(progress);
+    const justCleanedClass = isJustCleaned(t) ? "just-cleaned" : "";
+    const spongeAnimClass = animatedTaskId === t.id ? "sponge-animate" : "";
+    const spongeHitClass = animatedTaskId === t.id ? "sponge-hit" : "";
+
+    const card = document.createElement("div");
+    card.id = `task-${t.id}`;
+    card.dataset.taskId = t.id;
+    card.className = `card ${justCleanedClass} ${spongeHitClass}`;
+    card.innerHTML = `
+      <div class="task-header">
+        <div class="task-title">${t.name}</div>
+        <div class="task-room-badge">${t.room}</div>
+      </div>
+      <div class="meta-row"><span class="meta-icon">📅</span><span class="meta-label">Última limpieza:</span> <span class="meta-value">${formatDate(t.last)}</span></div>
+      <div class="meta-row"><span class="meta-icon">⏳</span><span class="meta-label">Frecuencia:</span> <span class="meta-value">cada ${formatDays(t.days)}</span></div>
+      <div class="meta-row"><span class="meta-icon">🥵</span><span class="meta-label">Dificultad:</span> <span class="meta-value">${difficultyIcons(Number(t.difficulty || 1))}</span></div>
+      <div class="meta" style="margin-top:8px;"><span class="meta-icon">✨</span> <span class="meta-label">Estado actual:</span> <span class="meta-value ${getCleanlinessPercent(t)>=70 ? "state-good" : getCleanlinessPercent(t)>=40 ? "state-warning" : "state-bad"}">${getCleanlinessPercent(t)>=60 ? "👌" : getCleanlinessPercent(t)>=25 ? "😐" : getCleanlinessPercent(t)>=5 ? "😢" : "<span class=\"poop-shake-once\">💩</span>"} ${getCleanlinessPercent(t)}% limpio</span></div>
+      <div class="bar">
+        <div class="fill ${elapsed>=t.days?'red':''}" style="width:${progress*100}%; background:${fillColor}"></div>
+        ${overdue>0 ? `<div class="over" style="width:${Math.min(overdue/t.days,1)*100}%"></div>` : ""}
+      </div>
+      <div class="meta">
+        ${elapsed >= t.days ? `Lleva ${formatDays(overdue)} de retraso` : `Quedan ${formatDays(t.days - elapsed)}`}
+      </div>
+      <div class="actions">
+        <div class="action-left">
+          <button type="button" class="icon-btn" onclick="openEditModal(${realIndex})" title="Editar">✏️</button>
+          <button type="button" class="icon-btn danger-icon" onclick="deleteTask(${realIndex})" title="Borrar">🗑️</button>
+        </div>
+        <div class="action-right">
+          <button type="button" class="icon-btn primary-icon clean-big ${spongeAnimClass}" onclick="clean(${realIndex})" title="Marcar como limpiado">🧽</button>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function openSortPopup() {
+  animatedTaskId = null;
+  render();
+  document.getElementById("sortPopupBackdrop").classList.add("open");
+}
+
+function closeSortPopup() {
+  document.getElementById("sortPopupBackdrop").classList.remove("open");
+}
+
+function openFilterPopup() {
+  animatedTaskId = null;
+  render();
+  document.getElementById("filterPopupBackdrop").classList.add("open");
+}
+
+function closeFilterPopup() {
+  document.getElementById("filterPopupBackdrop").classList.remove("open");
+}
+
+function setSort(value) {
+  currentSort = value;
+  saveSort();
+  refreshFrozenOrder();
+  closeSortPopup();
+  render();
+}
+
+function setFilter(value) {
+  currentFilter = value;
+  saveFilter();
+  refreshFrozenOrder();
+  closeFilterPopup();
+  render();
+}
+
+function clean(i){
+  tasks[i].last = Date.now();
+  animatedTaskId = tasks[i].id;
+  saveTasks();
+
+  try {
+    if (navigator.vibrate) navigator.vibrate(35);
+  } catch (e) {}
+
+  if (homeCode) {
+    const eventRef = db.ref(getHomePath("history")).push();
+    eventRef.set({
+      user: currentUserName || "Sin nombre",
+      taskName: tasks[i].name,
+      taskId: tasks[i].id,
+      points: pointsForTask(tasks[i]),
+      at: Date.now()
+    });
+  }
+
+  render();
+  spawnCleaningBubbles();
+  spawnCleaningSparkles();
+
+  setTimeout(() => {
+    animatedTaskId = null;
+    render();
+  }, 700);
+}
+
+function openEditModal(i) {
+  const task = tasks[i];
+  editingTaskId = task.id;
+  document.getElementById("modalTitle").textContent = "Editar tarea";
+  document.getElementById("taskName").value = task.name;
+  document.getElementById("taskRoom").value = task.room;
+  document.getElementById("taskDays").value = task.days;
+  document.getElementById("taskLast").value = formatDateForInput(task.last);
+  selectedDifficulty = Number(task.difficulty || 1);
+  renderDifficultyPicker();
+  document.getElementById("taskModalBackdrop").classList.add("open");
+}
+
+function openAddModal() {
+  if (currentView === "reminders") {
+    openAddReminderModal();
+    return;
+  }
+  currentView = "tasks";
+  updateViewUI();
+  updateTopNav();
+  editingTaskId = null;
+  document.getElementById("modalTitle").textContent = "Añadir tarea";
+  document.getElementById("taskName").value = "";
+  document.getElementById("taskRoom").value = "";
+  document.getElementById("taskDays").value = "";
+  document.getElementById("taskLast").value = "";
+  selectedDifficulty = 1;
+  renderDifficultyPicker();
+  document.getElementById("taskModalBackdrop").classList.add("open");
+}
+
+function closeTaskModal() {
+  document.getElementById("taskModalBackdrop").classList.remove("open");
+}
+
+function saveTaskFromModal() {
+  const name = document.getElementById("taskName").value.trim();
+  const room = document.getElementById("taskRoom").value.trim();
+  const days = Number(document.getElementById("taskDays").value);
+  const lastStr = document.getElementById("taskLast").value.trim();
+
+  if (!name) return alert("Escribe un nombre.");
+  if (!room) return alert("Escribe una estancia.");
+  if (!days || days <= 0) return alert("La frecuencia debe ser un número mayor que 0.");
+
+  let parsedLast = null;
+  if (lastStr !== "") {
+    parsedLast = parseInputDate(lastStr);
+    if (parsedLast === null) return alert("La fecha no es válida.");
+  }
+
+  if (editingTaskId) {
+    const index = tasks.findIndex(t => t.id === editingTaskId);
+    if (index !== -1) {
+      tasks[index].name = name;
+      tasks[index].room = room;
+      tasks[index].days = days;
+      tasks[index].last = parsedLast;
+      tasks[index].difficulty = selectedDifficulty;
+    }
+  } else {
+    tasks.push({ id: crypto.randomUUID(), name, room, days, last: parsedLast, difficulty: selectedDifficulty });
+  }
+
+  saveTasks();
+  refreshFrozenOrder();
+  closeTaskModal();
+  render();
+}
+
+function deleteTask(i) {
+  if (!confirm(`¿Borrar la tarea "${tasks[i].name}"?`)) return;
+  tasks.splice(i, 1);
+  saveTasks();
+  refreshFrozenOrder();
+  render();
+}
+
+function resetAllLastDates() {
+  if (!confirm("¿Seguro que quieres borrar todas las fechas guardadas?")) return;
+  tasks = tasks.map(t => ({ ...t, last: null }));
+  saveTasks();
+  refreshFrozenOrder();
+  render();
+}
+
+function openAddReminderModal() {
+  editingReminderId = null;
+  document.getElementById("reminderModalTitle").textContent = "Añadir recordatorio";
+  document.getElementById("reminderName").value = "";
+  document.getElementById("reminderDays").value = "";
+  document.getElementById("reminderLast").value = "";
+  selectedReminderCategory = "generic";
+  renderReminderCategoryPicker();
+  document.getElementById("reminderModalBackdrop").classList.add("open");
+}
+
+function openEditReminderModal(i) {
+  const reminder = reminders[i];
+  editingReminderId = reminder.id;
+  document.getElementById("reminderModalTitle").textContent = "Editar recordatorio";
+  document.getElementById("reminderName").value = reminder.name;
+  document.getElementById("reminderDays").value = reminder.days;
+  document.getElementById("reminderLast").value = formatDateForInput(reminder.last);
+  selectedReminderCategory = reminder.category || "generic";
+  renderReminderCategoryPicker();
+  document.getElementById("reminderModalBackdrop").classList.add("open");
+}
+
+function closeReminderModal() {
+  document.getElementById("reminderModalBackdrop").classList.remove("open");
+}
+
+function saveReminderFromModal() {
+  const name = document.getElementById("reminderName").value.trim();
+  const days = Number(document.getElementById("reminderDays").value);
+  const lastStr = document.getElementById("reminderLast").value.trim();
+
+  if (!name) return alert("Escribe un nombre para el recordatorio.");
+  if (!days || days <= 0) return alert("La frecuencia debe ser un número mayor que 0.");
+
+  let parsedLast = null;
+  if (lastStr !== "") {
+    parsedLast = parseInputDate(lastStr);
+    if (parsedLast === null) return alert("La fecha no es válida.");
+  }
+
+  if (editingReminderId) {
+    const index = reminders.findIndex(r => r.id === editingReminderId);
+    if (index !== -1) {
+      reminders[index].name = name;
+      reminders[index].days = days;
+      reminders[index].last = parsedLast;
+      reminders[index].category = selectedReminderCategory;
+    }
+  } else {
+    reminders.push({
+      id: crypto.randomUUID(),
+      name,
+      days,
+      last: parsedLast,
+      category: selectedReminderCategory
+    });
+  }
+
+  db.ref(getRemindersPath()).set(reminders);
+  closeReminderModal();
+}
+
+function completeReminder(i) {
+  reminders[i].last = Date.now();
+  animatedTaskId = reminders[i].id;
+  db.ref(getRemindersPath()).set(reminders);
+  renderReminders();
+
+  try {
+    if (navigator.vibrate) navigator.vibrate(35);
+  } catch (e) {}
+
+  spawnCleaningBubbles();
+  spawnCleaningSparkles();
+
+  setTimeout(() => {
+    animatedTaskId = null;
+    renderReminders();
+  }, 700);
+}
+
+function deleteReminder(i) {
+  if (!confirm(`¿Borrar el recordatorio "${reminders[i].name}"?`)) return;
+  reminders.splice(i, 1);
+  db.ref(getRemindersPath()).set(reminders);
+}
+
+document.getElementById("taskModalBackdrop").addEventListener("click", function(e) {
+  if (e.target === this) closeTaskModal();
+});
+document.getElementById("sortToggle").addEventListener("click", openSortPopup);
+document.getElementById("filterToggle").addEventListener("click", openFilterPopup);
+document.getElementById("sortPopupBackdrop").addEventListener("click", function(e) {
+  if (e.target === this) closeSortPopup();
+});
+document.getElementById("filterPopupBackdrop").addEventListener("click", function(e) {
+  if (e.target === this) closeFilterPopup();
+});
+document.getElementById("reminderFilterPopupBackdrop").addEventListener("click", function(e) {
+  if (e.target === this) closeReminderFilterPopup();
+});
+document.getElementById("reminderModalBackdrop").addEventListener("click", function(e) {
+  if (e.target === this) closeReminderModal();
+});
+document.getElementById("reminderFilterToggle").addEventListener("click", openReminderFilterPopup);
+document.getElementById("reminderFilterPopupOptions").addEventListener("click", function(e) {
+  const btn = e.target.closest("[data-reminder-filter]");
+  if (!btn) return;
+  setReminderFilter(btn.dataset.reminderFilter);
+});
+document.getElementById("sortPopupOptions").addEventListener("click", function(e) {
+  const btn = e.target.closest("[data-sort]");
+  if (!btn) return;
+  setSort(btn.dataset.sort);
+});
+document.getElementById("filterPopupOptions").addEventListener("click", function(e) {
+  const btn = e.target.closest("[data-filter]");
+  if (!btn) return;
+  setFilter(btn.dataset.filter);
+});
+
+
+document.getElementById("saveSetupBtn").addEventListener("click", function() {
+  const code = document.getElementById("homeCodeInput").value.trim();
+  const user = document.getElementById("userNameInput").value.trim();
+  if (!code || !user) {
+    alert("Escribe el código de vivienda y tu nombre.");
+    return;
+  }
+  homeCode = code;
+  currentUserName = user;
+  localStorage.setItem(HOME_KEY, homeCode);
+  localStorage.setItem(USER_KEY, currentUserName);
+  closeSetup();
+  startRealtimeSync();
+});
+
+document.getElementById("setupBackdrop").addEventListener("click", function(e) {
+  if (e.target === this && homeCode && currentUserName) closeSetup();
+});
+
+document.getElementById("settingsToggle").addEventListener("click", function() {
+  openSetup();
+});
+
+document.getElementById("navTasks").addEventListener("click", function() {
+  currentView = "tasks";
+  updateViewUI();
+  updateTopNav();
+});
+
+document.getElementById("navStats").addEventListener("click", function() {
+  currentView = "stats";
+  updateViewUI();
+  updateTopNav();
+});
+
+document.getElementById("navReminders").addEventListener("click", function() {
+  currentView = "reminders";
+  updateViewUI();
+  updateTopNav();
+  renderReminders();
+});
+
+document.getElementById("resetPointsBtn").addEventListener("click", function() {
+  if (!confirm("¿Seguro que quieres resetear el contador de puntos a 0?")) return;
+  if (!homeCode) return;
+  db.ref(getHomePath("history")).set([]);
+});
+
+if (homeCode && currentUserName) {
+  startRealtimeSync();
+} else {
+  openSetup();
+}
+updateViewUI();
+updateTopNav();
+renderDifficultyPicker();
+renderReminderCategoryPicker();
+renderReminders();
+
+render();
+
+
+
+function updateTopNav() {
+  const navTasks = document.getElementById("navTasks");
+  const navStats = document.getElementById("navStats");
+  const navReminders = document.getElementById("navReminders");
+  if (!navTasks || !navStats || !navReminders) return;
+
+  navTasks.classList.remove("active");
+  navStats.classList.remove("active");
+  navReminders.classList.remove("active");
+
+  if (currentView === "stats") {
+    navStats.classList.add("active");
+  } else if (currentView === "reminders") {
+    navReminders.classList.add("active");
+  } else {
+    navTasks.classList.add("active");
+  }
+}
+
+document.getElementById("navTasks").addEventListener("click", function() {
+  currentView = "tasks";
+  document.getElementById("tasksView").classList.remove("hidden-view");
+  document.getElementById("statsView").classList.add("hidden-view");
+  document.getElementById("remindersView").classList.add("hidden-view");
+  updateTopNav();
+});
+
+document.getElementById("navStats").addEventListener("click", function() {
+  currentView = "stats";
+  updateViewUI();
+  updateTopNav();
+});
+
+document.getElementById("navReminders").addEventListener("click", function() {
+  currentView = "reminders";
+  document.getElementById("tasksView").classList.add("hidden-view");
+  document.getElementById("statsView").classList.add("hidden-view");
+  document.getElementById("remindersView").classList.remove("hidden-view");
+  updateTopNav();
+});
+
+updateTopNav();
+
+
+// THEME SYSTEM
+
+const THEME_KEY = "pocilg_theme";
+
+function applyTheme(theme){
+  const btn = document.getElementById("themeToggle");
+  if(theme === "dark"){
+    document.body.classList.add("dark-mode");
+    if (btn) btn.textContent = "☀️";
+  } else {
+    document.body.classList.remove("dark-mode");
+    if (btn) btn.textContent = "🌙";
+  }
+}
+
+function detectSystemTheme(){
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
+function initTheme(){
+  const saved = localStorage.getItem(THEME_KEY);
+  const theme = saved || detectSystemTheme();
+  applyTheme(theme);
+}
+
+document.getElementById("themeToggle").addEventListener("click", ()=>{
+  const isDark = document.body.classList.contains("dark-mode");
+  const newTheme = isDark ? "light" : "dark";
+  localStorage.setItem(THEME_KEY, newTheme);
+  applyTheme(newTheme);
+});
+
+initTheme();
+
+
+function goToCritical(){
+  const tasks = document.querySelectorAll('[id^="task-"]');
+  for (let el of tasks){
+    const text = el.innerText;
+    if (text.includes('💩')){ 
+      el.scrollIntoView({behavior:'smooth', block:'center'});
+      el.classList.add('highlight');
+      setTimeout(()=>el.classList.remove('highlight'),1000);
+      break;
+    }
+  }
+}
+
+
+function scrollToTask(taskId){
+  const el = document.querySelector(`[data-task-id="${taskId}"]`);
+  if(!el) return;
+  el.scrollIntoView({behavior:'smooth', block:'center'});
+  el.classList.add('highlight-task');
+  setTimeout(()=> el.classList.remove('highlight-task'), 800);
+}
+
+
+function scrollToReminder(reminderId){
+  const el = document.querySelector(`[data-reminder-id="${reminderId}"]`);
+  if(!el) return;
+
+  if (currentView !== "reminders") {
+    currentView = "reminders";
+    updateViewUI();
+    if (typeof updateTopNav === "function") updateTopNav();
+  }
+
+  setTimeout(() => {
+    const target = document.querySelector(`[data-reminder-id="${reminderId}"]`);
+    if(!target) return;
+    target.scrollIntoView({behavior:'smooth', block:'center'});
+    target.classList.add('highlight-task');
+    setTimeout(()=> target.classList.remove('highlight-task'), 1000);
+  }, 50);
+}
+
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(console.error));
+}
+
+function scrollToTask(taskId){
+  const el = document.querySelector(`[data-task-id="${taskId}"]`);
+  if(!el) return;
+  el.scrollIntoView({behavior:'smooth', block:'center'});
+  el.classList.add('highlight-task');
+  setTimeout(()=> el.classList.remove('highlight-task'), 800);
+}
+
+
+function scrollToReminder(reminderId){
+  const el = document.querySelector(`[data-reminder-id="${reminderId}"]`);
+  if(!el) return;
+
+  if (currentView !== "reminders") {
+    currentView = "reminders";
+    updateViewUI();
+    if (typeof updateTopNav === "function") updateTopNav();
+  }
+
+  setTimeout(() => {
+    const target = document.querySelector(`[data-reminder-id="${reminderId}"]`);
+    if(!target) return;
+    target.scrollIntoView({behavior:'smooth', block:'center'});
+    target.classList.add('highlight-task');
+    setTimeout(()=> target.classList.remove('highlight-task'), 1000);
+  }, 50);
+}
+
+</script></body>
+</html>
